@@ -9,12 +9,9 @@ To serve this need it seems reasonable to isolate the Paxos algorithm into a dis
 
 ## Bugs
 
-1. We should only send proposals to nodes that responded with
-   a promise. Currently we send to all.
-2. Duplicated Accept messages can misinform a learner.
+1. Duplicated Accept messages can misinform a learner.
    Learners might benefit from optional logic to
    know the source of the learned information.
-
 
 ## Improvements
 

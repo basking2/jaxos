@@ -1,0 +1,16 @@
+///////////////////////////////////
+/// Documentation.
+///////////////////////////////////
+
+ifndef::included[]
+Jaxos {project-version}
+=======================
+Sam Baskinger <basking2@yahoo.com>
+:toc: left
+:toclevels: 6
+
+endif::[]
+
+:imagesdir: imgs
+
+## About This Document
