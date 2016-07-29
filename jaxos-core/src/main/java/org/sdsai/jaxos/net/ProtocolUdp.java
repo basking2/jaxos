@@ -75,12 +75,7 @@ public class ProtocolUdp implements Protocol {
 							for (final SelectionKey key : keys) {
 								if (key.isReadable()) {
 									if (key.channel() instanceof DatagramChannel) {
-										final DatagramChannel dgc = (DatagramChannel) key.channel();
-										final ByteBuffer cipherBuffer = ByteBuffer.allocate(29 + BaseMessage.MAX_DATA_SIZE);
-										final SocketAddress addr = dgc.receive(cipherBuffer);
-										final ByteBuffer buffer = cipherUtil.decrypt(cipherBuffer);
-										LOG.info("Decoding msg from {} into handler.", addr);
-										BaseMessage.decode(buffer, addr, ProtocolUdp.this, messageHandler);
+									    recv((DatagramChannel)key.channel());
 									}
 								}
 							}
@@ -96,6 +91,18 @@ public class ProtocolUdp implements Protocol {
 		this.receiver.setDaemon(true);
 		this.receiver.start();
 	}
+
+	private void recv(final DatagramChannel dgc) {
+	    try {
+            final ByteBuffer cipherBuffer = ByteBuffer.allocate(29 + BaseMessage.MAX_DATA_SIZE);
+            final SocketAddress addr = dgc.receive(cipherBuffer);
+            final ByteBuffer buffer = cipherUtil.decrypt(cipherBuffer);
+            LOG.info("Decoding msg from {} into handler.", addr);
+            BaseMessage.decode(buffer, addr, ProtocolUdp.this, messageHandler);
+        } catch (final IOException e) {
+            LOG.error(e.getMessage(), e);
+        }
+    }
 
 	@Override
 	public void close() throws Exception {
@@ -143,7 +150,6 @@ public class ProtocolUdp implements Protocol {
 
 	/**
 	 * {@inheritDoc}
-	 * @param id
 	 * @param n
 	 * @throws IOException
 	 */
