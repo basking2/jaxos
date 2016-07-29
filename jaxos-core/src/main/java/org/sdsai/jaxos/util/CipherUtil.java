@@ -56,21 +56,47 @@ public class CipherUtil {
 		}
 	}
 
-	public byte[] decrypt(final byte[] data) throws
-	NoSuchPaddingException,
-	NoSuchAlgorithmException,
-	InvalidKeySpecException,
-	InvalidKeyException,
-	BadPaddingException,
-	IllegalBlockSizeException,
-	InvalidParameterSpecException,
-	InvalidAlgorithmParameterException
+    public byte[] decrypt(final byte[] data) throws
+            NoSuchPaddingException,
+            NoSuchAlgorithmException,
+            InvalidKeySpecException,
+            InvalidKeyException,
+            BadPaddingException,
+            IllegalBlockSizeException,
+            InvalidParameterSpecException,
+            InvalidAlgorithmParameterException
+    {
+        return decrypt(data, 0, data.length);
+    }
+
+	public byte[] decrypt(final byte[] data, final int start, final int length) throws
+			NoSuchPaddingException,
+			NoSuchAlgorithmException,
+			InvalidKeySpecException,
+			InvalidKeyException,
+			BadPaddingException,
+			IllegalBlockSizeException,
+			InvalidParameterSpecException,
+			InvalidAlgorithmParameterException
 	{
-		final Cipher cipher = buildCipher(Cipher.DECRYPT_MODE);
-		return cipher.doFinal(data);
+        final Cipher cipher = buildCipher(Cipher.DECRYPT_MODE);
+        return cipher.doFinal(data, start, length);
 	}
 
-	public byte[] encrypt(final byte[] data) throws
+    public byte[] encrypt(final byte[] data) throws
+            NoSuchPaddingException,
+            NoSuchAlgorithmException,
+            InvalidKeySpecException,
+            InvalidKeyException,
+            BadPaddingException,
+            IllegalBlockSizeException,
+            InvalidParameterSpecException,
+            InvalidAlgorithmParameterException
+    {
+        return encrypt(data, 0, data.length);
+    }
+
+	public byte[] encrypt(final byte[] data, final int start, final int length) throws
 	NoSuchPaddingException,
 	NoSuchAlgorithmException,
 	InvalidKeySpecException,
@@ -81,7 +107,7 @@ public class CipherUtil {
 	InvalidAlgorithmParameterException
 	{
 		final Cipher cipher = buildCipher(Cipher.ENCRYPT_MODE);
-		return cipher.doFinal(data);
+		return cipher.doFinal(data, start, length);
 	}
 
 	public Cipher buildCipher(final int mode) throws
