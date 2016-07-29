@@ -45,7 +45,6 @@ public class ProtocolUdp implements Protocol {
 
 	/**
 	 * 
-	 * @param messageHandler When the server thread decodes a message it is passed here.
 	 * @param configuration This configuration is used to build description bits.
 	 * @param acceptors The list of acceptors to consult.
 	 * @param learners The list of the learners to consult.
