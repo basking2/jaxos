@@ -30,18 +30,13 @@ import org.slf4j.LoggerFactory;
  *
  * The only state that this protocol layer maintains is prepares.
  */
-public class ProtocolUdp implements Protocol {
+public class ProtocolUdp extends AbstractProtocol {
 
 	private final Logger LOG = LoggerFactory.getLogger(ProtocolUdp.class);
-	private final CipherUtil cipherUtil;
-	private final Selector selector;
 	private final DatagramChannel datagramChannel;
 	private MessageHandler messageHandler;
-	private List<? extends SocketAddress> learners = new ArrayList<SocketAddress>();
-	private List<? extends SocketAddress> acceptors = new ArrayList<SocketAddress>();
 
 	private final Thread receiver;
-	
 
 	/**
 	 * 
@@ -56,10 +51,7 @@ public class ProtocolUdp implements Protocol {
 			final List<? extends SocketAddress> acceptors,
 			final List<? extends SocketAddress> learners
 			) throws IOException {
-		this.acceptors = acceptors;
-		this.learners = learners;
-		this.cipherUtil = new CipherUtil(configuration);
-		this.selector = (AbstractSelector)Selector.open();
+        super(bind, configuration, acceptors, learners);
 		this.datagramChannel = DatagramChannel.open().bind(bind);
 		this.datagramChannel.configureBlocking(false);
 		this.datagramChannel.register(this.selector, SelectionKey.OP_READ);
@@ -110,7 +102,7 @@ public class ProtocolUdp implements Protocol {
 		receiver.join();
 	}
 
-	public void send(final BaseMessage msg, final SocketAddress addr) throws IOException {
+	protected void send(final BaseMessage msg, final SocketAddress addr) throws IOException {
 		final ByteBuffer buffer = msg.encode();
 		final ByteBuffer encryptedBuffer = cipherUtil.encrypt(buffer);
 
@@ -125,48 +117,4 @@ public class ProtocolUdp implements Protocol {
 		this.messageHandler = messageHandler;
 	}
 
-	/**
-	 * {@inheritDoc}
-	 */
-	@Override
-	public void sendLearners(BaseMessage msg) throws IOException {
-		for (final SocketAddress addr : learners) {
-			LOG.info("Sending to learners {}", addr);
-			send(msg, addr);
-		}
-	}
-
-	/**
-	 * {@inheritDoc}
-	 */
-	@Override
-	public void sendAcceptors(BaseMessage msg) throws IOException {
-		for (final SocketAddress addr : acceptors) {
-			LOG.info("Sending to acceptor {}", addr);
-			send(msg, addr);
-		}
-	}
-
-	/**
-	 * {@inheritDoc}
-	 * @param n
-	 * @throws IOException
-	 */
-	@Override
-	public void sendPrepare(final String instance, Long n) throws IOException {
-		sendAcceptors(new PrepareMessage(instance, n, null, ProtocolUdp.this));
-	}
-
-	/**
-	 * {@inheritDoc}
-	 */
-	@Override
-	public void send(final BaseMessage msg) throws IOException {
-		send(msg, msg.addr);
-	}
-
-	@Override
-	public int numAcceptors() {
-		return acceptors.size();
-	}
 }

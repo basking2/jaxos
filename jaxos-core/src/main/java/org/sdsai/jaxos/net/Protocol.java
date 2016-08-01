@@ -1,6 +1,7 @@
 package org.sdsai.jaxos.net;
 
 import java.io.IOException;
+import org.sdsai.jaxos.paxos.*;
 
 /**
  * This is the network layer for Jaxos.
@@ -33,12 +34,12 @@ public interface Protocol extends AutoCloseable {
      * @param msg The proposal that has been accepted.
      * @throws IOException
      */
-    void sendLearners(BaseMessage msg) throws IOException;
+    void sendLearners(AcceptMessage msg) throws IOException;
     
     /**
      * Send a message to all {@link Acceptor}s. 
      * 
-     * This is typically a {@link Prepare} or {@link Propose} message.
+     * This is typically a {@link PrepareMessage} or {@link ProposeMessage} message.
      * @param msg
      * @throws IOException
      */

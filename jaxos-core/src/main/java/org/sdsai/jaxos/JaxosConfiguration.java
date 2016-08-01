@@ -15,14 +15,19 @@ import org.apache.commons.configuration.PropertiesConfiguration;
 import org.apache.commons.configuration.SystemConfiguration;
 import org.sdsai.jaxos.net.JaxosEnsemble;
 import org.sdsai.jaxos.net.Protocol;
+import org.sdsai.jaxos.net.ProtocolTcp;
 import org.sdsai.jaxos.net.ProtocolUdp;
 import org.sdsai.jaxos.paxos.Learner;
 import org.sdsai.jaxos.paxos.PaxosAcceptorDao;
 import org.sdsai.jaxos.paxos.PaxosProposerDao;
+import org.slf4j.Logger;
+import org.slf4j.LoggerFactory;
 
 /**
  */
 public class JaxosConfiguration extends CompositeConfiguration {
+    private static final Logger LOG = LoggerFactory.getLogger(JaxosConfiguration.class);
+
     public JaxosConfiguration() {
         // Add system properties.
         addConfiguration(new SystemConfiguration());
@@ -104,9 +109,17 @@ public class JaxosConfiguration extends CompositeConfiguration {
     	    	
     	// Build UDP Protocols
     	for (final InetSocketAddress bind : udpBind) {
+    	    LOG.info("Binding udp to {}", bind);
     		Protocol protocol = new ProtocolUdp(bind, this, udpAcceptors, udpLearners);
     		ensemble.addProtocol(protocol);
     	}
+
+		// Build TCP Protocols
+		for (final InetSocketAddress bind : tcpBind) {
+            LOG.info("Binding tcp to {}", bind);
+			Protocol protocol = new ProtocolTcp(bind, this, tcpAcceptors, tcpLearners);
+			ensemble.addProtocol(protocol);
+		}
 
     	return ensemble;
     }
@@ -114,10 +127,10 @@ public class JaxosConfiguration extends CompositeConfiguration {
     
     public List<InetSocketAddress> protoAddresses(final String property, final String proto) {
     	final List<InetSocketAddress> addresses = new ArrayList<InetSocketAddress>();
-    	final String addressesString = getString(property);
+        final String[] addressesStrings = getStringArray(property);
 
-    	if (addressesString != null) {
-    		for (final String addressString : addressesString.split("\\s*,\\s*")) {
+    	if (addressesStrings != null) {
+    		for (final String addressString : addressesStrings) {
     			final String protoAddr[] = addressString.split("/", 2);
     			if (protoAddr.length == 2) {
     				if (protoAddr[0].equals(proto)) {
