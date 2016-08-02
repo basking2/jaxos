@@ -10,7 +10,6 @@ import java.net.InetSocketAddress;
 import java.net.SocketAddress;
 import java.nio.channels.Selector;
 import java.nio.channels.spi.AbstractSelector;
-import java.util.ArrayList;
 import java.util.List;
 
 /**
@@ -36,7 +35,8 @@ public abstract class AbstractProtocol implements Protocol {
         this.cipherUtil = new CipherUtil(configuration);
     }
 
-    protected abstract void send(BaseMessage msg, SocketAddress addr) throws IOException;
+    @Override
+    public abstract void send(BaseMessage msg, SocketAddress addr) throws IOException;
 
     @Override
     public void close() throws Exception {
@@ -75,14 +75,6 @@ public abstract class AbstractProtocol implements Protocol {
     @Override
     public void sendPrepare(final String instance, Long n) throws IOException {
         sendAcceptors(new PrepareMessage(instance, n, null, this));
-    }
-
-    /**
-     * {@inheritDoc}
-     */
-    @Override
-    public void send(BaseMessage msg) throws IOException {
-        send(msg, msg.addr);
     }
 
     /**

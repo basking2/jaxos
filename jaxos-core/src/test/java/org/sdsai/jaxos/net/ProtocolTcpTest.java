@@ -64,7 +64,7 @@ public class ProtocolTcpTest {
                 }
             });
 
-            p.send(new AcceptMessage("a", new Proposal<ByteBuffer>(0L, ByteBuffer.allocate(0)), addr, p));
+            p.send(new AcceptMessage("a", new Proposal<ByteBuffer>(0L, ByteBuffer.allocate(0)), addr, p), addr);
 
             lock.wait();
         }

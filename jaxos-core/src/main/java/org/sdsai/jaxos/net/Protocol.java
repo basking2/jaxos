@@ -1,6 +1,8 @@
 package org.sdsai.jaxos.net;
 
 import java.io.IOException;
+import java.net.SocketAddress;
+
 import org.sdsai.jaxos.paxos.*;
 
 /**
@@ -51,7 +53,7 @@ public interface Protocol extends AutoCloseable {
      * @param msg
      * @throws IOException
      */
-    void send(BaseMessage msg) throws IOException;
+    void send(BaseMessage msg, SocketAddress addr) throws IOException;
 
     /**
      * Typically used for quorum calculations.

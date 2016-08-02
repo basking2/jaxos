@@ -136,7 +136,7 @@ public class JaxosEnsemble implements AutoCloseable {
 			try {
 				final Promise<ByteBuffer> promise = acceptor.prepare(msg.instance, msg.proposalN);
 				final PromiseMessage promiseMessage = new PromiseMessage(msg.instance, promise, msg.addr, msg.protocol);
-				msg.protocol.send(promiseMessage);
+				msg.protocol.send(promiseMessage, msg.addr);
 			}
 			catch (final IOException e) {
 				LOG.error("Handling prepare.", e);

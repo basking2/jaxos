@@ -7,6 +7,11 @@ import org.glassfish.grizzly.http.server.NetworkListener;
 import org.glassfish.grizzly.http.server.Request;
 import org.glassfish.grizzly.http.server.Response;
 import org.glassfish.grizzly.http.util.HttpStatus;
+import org.glassfish.grizzly.nio.NIOTransport;
+import org.glassfish.grizzly.nio.transport.TCPNIOTransport;
+import org.glassfish.grizzly.nio.transport.TCPNIOTransportBuilder;
+import org.glassfish.grizzly.strategies.WorkerThreadIOStrategy;
+import org.glassfish.grizzly.threadpool.ThreadPoolConfig;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 import org.slf4j.bridge.SLF4JBridgeHandler;
@@ -27,31 +32,51 @@ public class JaxosWebMain {
         HttpServer server = new HttpServer();
 
         server.getServerConfiguration().addHttpHandler(
-            new JaxosHttpHandler(),
-            HttpHandlerRegistration.builder().contextPath("/jaxos/api/v1").build()
+                new JaxosHttpHandler(),
+                HttpHandlerRegistration.builder().contextPath("/jaxos/api/v1").build()
         );
 
         server.getServerConfiguration().addHttpHandler(new HttpHandler() {
             @Override
             public void service(Request request, Response response) throws Exception {
-            	LOG.info("Unhandled.");
-            	response.getOutputBuffer().write("Not found.");
-            	response.setStatus(HttpStatus.NOT_FOUND_404);
-            	response.finish();
+                LOG.info("Unhandled.");
+                response.getOutputBuffer().write("Not found.");
+                response.setStatus(HttpStatus.NOT_FOUND_404);
+                response.finish();
             }
         });
 
-        server.addListener(new NetworkListener("jaxos", "0.0.0.0", 8080));
+        NetworkListener networkListener = new NetworkListener("jaxos", "0.0.0.0", 8080);
+
+        networkListener.setTransport(nioTransportBuild());
+
+        server.addListener(networkListener);
         server.start();
 
-        Runtime.getRuntime().addShutdownHook(new Thread(()->{
+        Runtime.getRuntime().addShutdownHook(new Thread(() -> {
             LOG.info("Shutting down.");
             server.shutdown();
         }));
 
-        synchronized(server) {
+        synchronized (server) {
             server.wait();
         }
+    }
+
+    private static TCPNIOTransport nioTransportBuild() {
+        return TCPNIOTransportBuilder.newInstance().
+                setKeepAlive(true).
+                setTcpNoDelay(true).
+                setIOStrategy(WorkerThreadIOStrategy.getInstance()).
+                /*
+                setSelectorThreadPoolConfig(
+                        ThreadPoolConfig.defaultConfig().copy().setCorePoolSize(50).setMaxPoolSize(50).setQueueLimit(-1)
+                ).
+                setWorkerThreadPoolConfig(
+                        ThreadPoolConfig.defaultConfig().copy().setCorePoolSize(50).setMaxPoolSize(50).setQueueLimit(-1)
+                ).
+                */
+                build();
     }
 
     private static void redirectLogging() {

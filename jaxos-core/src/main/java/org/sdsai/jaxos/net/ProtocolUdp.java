@@ -89,7 +89,7 @@ public class ProtocolUdp extends AbstractProtocol {
             final SocketAddress addr = dgc.receive(cipherBuffer);
             final ByteBuffer buffer = cipherUtil.decrypt(cipherBuffer);
             LOG.info("Decoding msg from {} into handler.", addr);
-            BaseMessage.decode(buffer, addr, ProtocolUdp.this, messageHandler);
+            BaseMessage.decode(buffer, addr, this, messageHandler);
         } catch (final IOException e) {
             LOG.error(e.getMessage(), e);
         }
@@ -97,12 +97,17 @@ public class ProtocolUdp extends AbstractProtocol {
 
 	@Override
 	public void close() throws Exception {
-		selector.close();
-		datagramChannel.close();
+		super.close();
+
+		if (datagramChannel.isOpen()) {
+			datagramChannel.close();
+		}
+
 		receiver.join();
 	}
 
-	protected void send(final BaseMessage msg, final SocketAddress addr) throws IOException {
+	@Override
+	public void send(final BaseMessage msg, final SocketAddress addr) throws IOException {
 		final ByteBuffer buffer = msg.encode();
 		final ByteBuffer encryptedBuffer = cipherUtil.encrypt(buffer);
 
