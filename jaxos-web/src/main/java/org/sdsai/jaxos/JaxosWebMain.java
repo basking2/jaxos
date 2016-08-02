@@ -26,7 +26,10 @@ public class JaxosWebMain {
         startServer();
     }
 
-    private static void startServer() throws Exception {
+    private static void startServer() throws Exception
+    {
+        final JaxosConfiguration config = new JaxosConfiguration();
+
         HttpServer server = new HttpServer();
 
         server.getServerConfiguration().addHttpHandler(
@@ -49,7 +52,10 @@ public class JaxosWebMain {
             }
         });
 
-        NetworkListener networkListener = new NetworkListener("jaxos", "0.0.0.0", 8080);
+        final Integer port = config.getInt("jaxos.web.port", 8080);
+        final String bind = config.getString("jaxos.web.bind", "0.0.0.0");
+
+        NetworkListener networkListener = new NetworkListener("jaxos", bind, port);
 
         networkListener.setTransport(nioTransportBuild());
 

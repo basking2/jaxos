@@ -1,18 +1,11 @@
 package org.sdsai.jaxos;
 
-import java.io.File;
-import java.io.FileInputStream;
 import java.io.IOException;
-import java.io.InputStream;
 import java.net.InetSocketAddress;
 import java.nio.ByteBuffer;
 import java.util.ArrayList;
 import java.util.List;
 
-import org.apache.commons.configuration.CompositeConfiguration;
-import org.apache.commons.configuration.ConfigurationException;
-import org.apache.commons.configuration.PropertiesConfiguration;
-import org.apache.commons.configuration.SystemConfiguration;
 import org.sdsai.jaxos.net.JaxosEnsemble;
 import org.sdsai.jaxos.net.Protocol;
 import org.sdsai.jaxos.net.ProtocolTcp;
@@ -20,46 +13,17 @@ import org.sdsai.jaxos.net.ProtocolUdp;
 import org.sdsai.jaxos.paxos.Learner;
 import org.sdsai.jaxos.paxos.PaxosAcceptorDao;
 import org.sdsai.jaxos.paxos.PaxosProposerDao;
+import org.sdsai.util.AppConfiguration;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 
 /**
  */
-public class JaxosConfiguration extends CompositeConfiguration {
+public class JaxosConfiguration extends AppConfiguration {
     private static final Logger LOG = LoggerFactory.getLogger(JaxosConfiguration.class);
 
     public JaxosConfiguration() {
-        // Add system properties.
-        addConfiguration(new SystemConfiguration());
-
-        // Load classpath properties.
-        try {
-            final PropertiesConfiguration classpathProperties = new PropertiesConfiguration();
-            classpathProperties.load(this.getClass().getResourceAsStream("/jaxos.properties"));
-            addConfiguration(classpathProperties);
-        } catch (final ConfigurationException e) {
-            // Nop.
-        }
-
-        // Load an optional properties file.
-        try {
-            final File jaxosProperties = new File("jaxos.properties");
-            if (jaxosProperties.canRead()) {
-                final PropertiesConfiguration fileProperties = new PropertiesConfiguration();
-
-                try (final InputStream is = new FileInputStream(jaxosProperties)) {
-                    fileProperties.load(is);
-                }
-                catch (final IOException e ){
-                    // Nop.
-                }
-
-                addConfiguration(fileProperties);
-            }
-        }
-        catch (final ConfigurationException e) {
-            // Nop.
-        }
+        super("jaxos");
     }
 
     public List<JaxosEnsemble> buildEnsembles(
@@ -70,7 +34,7 @@ public class JaxosConfiguration extends CompositeConfiguration {
     	
     	final List<JaxosEnsemble> ensembles = new ArrayList<JaxosEnsemble>();
     	
-    	final String ensemblesStr = getString("jaxos.ensembles");
+    	final String ensemblesStr = getString(name+".ensembles");
     	
     	if (ensemblesStr == null) {
     		return ensembles;
@@ -95,17 +59,17 @@ public class JaxosConfiguration extends CompositeConfiguration {
     	final JaxosEnsemble ensemble = new JaxosEnsemble(proposerDao, acceptorDao, learner);
     	
     	// Udp Acceptors, Learners and Bind.
-    	final List<InetSocketAddress> udpAcceptors = protoAddresses(String.format("jaxos.ensemble.%s.acceptors", ensembleName), "udp");
-    	final List<InetSocketAddress> udpLearners = protoAddresses(String.format("jaxos.ensemble.%s.learners", ensembleName), "udp");
-    	final List<InetSocketAddress> udpBind = protoAddresses(String.format("jaxos.ensemble.%s.bind", ensembleName), "udp");
+    	final List<InetSocketAddress> udpAcceptors = protoAddresses(String.format("%s.ensemble.%s.acceptors", name, ensembleName), "udp");
+    	final List<InetSocketAddress> udpLearners = protoAddresses(String.format("%s.ensemble.%s.learners", name, ensembleName), "udp");
+    	final List<InetSocketAddress> udpBind = protoAddresses(String.format("%s.ensemble.%s.bind", name, ensembleName), "udp");
 
     	// Tcp Acceptors, Learners and Bind.
-    	final List<InetSocketAddress> tcpAcceptors = protoAddresses(String.format("jaxos.ensemble.%s.acceptors", ensembleName), "tcp");
-    	final List<InetSocketAddress> tcpLearners = protoAddresses(String.format("jaxos.ensemble.%s.learners", ensembleName), "tcp");
-    	final List<InetSocketAddress> tcpBind = protoAddresses(String.format("jaxos.ensemble.%s.bind", ensembleName), "tcp");
+    	final List<InetSocketAddress> tcpAcceptors = protoAddresses(String.format("%s.ensemble.%s.acceptors", name, ensembleName), "tcp");
+    	final List<InetSocketAddress> tcpLearners = protoAddresses(String.format("%s.ensemble.%s.learners", name, ensembleName), "tcp");
+    	final List<InetSocketAddress> tcpBind = protoAddresses(String.format("%s.ensemble.%s.bind", name, ensembleName), "tcp");
 
-    	String.format("jaxos.ensemble.%s.quorum", ensembleName);
-    	String.format("jaxos.ensemble.%s.multi", ensembleName);
+    	String.format("%s.ensemble.%s.quorum", name, ensembleName);
+    	String.format("%s.ensemble.%s.multi", name, ensembleName);
     	    	
     	// Build UDP Protocols
     	for (final InetSocketAddress bind : udpBind) {

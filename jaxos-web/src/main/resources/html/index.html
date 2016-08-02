@@ -5,10 +5,20 @@
     <title>Jaxos</title>
 </head>
 <body>
-<form>
-    <input type="text" size="12" />
-    <input type="text" size="32" />
-    <input type="submit" onclick="doSubmit(); false" />
+<div>
+<form method="POST">
+    <input type="text" size="12" name="instance" value="key"/>
+    <input type="text" size="32" name="proposal" value="value"/>
+    <input type="submit" value="Paxos" />
 </form>
+
+</div><div>
+
+<form method="POST">
+    <input type="text" size="12" name="instance" value="key"/>
+    <input type="text" size="32" name="proposal" value="value"/>
+    <input type="submit" value="Multipaxos" />
+</form>
+</div>
 </body>
 </html>
