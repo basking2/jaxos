@@ -8,6 +8,7 @@ import java.util.concurrent.Future;
 import java.util.concurrent.TimeUnit;
 import java.util.concurrent.TimeoutException;
 
+import org.sdsai.jaxos.dao.LearnerDao;
 import org.sdsai.jaxos.net.JaxosEnsemble;
 import org.sdsai.jaxos.paxos.DefaultPaxosAcceptorDao;
 import org.sdsai.jaxos.paxos.DefaultPaxosProposerDao;
@@ -26,12 +27,19 @@ import com.google.common.cache.RemovalNotification;
 
 /**
  */
-public class JaxosFacade implements Learner.Listener<ByteBuffer> {
+public class JaxosFacade {
 	
 	final Logger LOG = LoggerFactory.getLogger(JaxosFacade.class);
 	final JaxosEnsemble ensemble;
 	final long timeout = 2;
 	final TimeUnit timeunit = TimeUnit.MINUTES;
+	final LearnerDao dao;
+
+    /**
+     * How in-flight values are learned.
+     *
+     * Once learned they are put into the dao.
+     */
 	final LoadingCache<String, CompletableFuture<Proposal<ByteBuffer>>> cache = 
 			CacheBuilder.newBuilder().
 			expireAfterWrite(2, TimeUnit.MINUTES).
@@ -42,20 +50,35 @@ public class JaxosFacade implements Learner.Listener<ByteBuffer> {
 				}
 			}).
 			build(new CacheLoader<String, CompletableFuture<Proposal<ByteBuffer>>>(){
-
 				@Override
 				public CompletableFuture<Proposal<ByteBuffer>> load(String subject) throws Exception {
 					return new CompletableFuture<Proposal<ByteBuffer>>();
 				}}
 			);
 	
-	public JaxosFacade(final JaxosConfiguration config) throws IOException{
+	public JaxosFacade(final JaxosConfiguration config, final LearnerDao dao) throws IOException{
+	    this.dao = dao;
 
-		ensemble = config.buildEnsemble(
+		this.ensemble = config.buildEnsemble(
 				"web",
 				new DefaultPaxosProposerDao<ByteBuffer>(timeout, timeunit),
 				new DefaultPaxosAcceptorDao<ByteBuffer>(timeout, timeunit),
-				this);
+                (instance, proposal) -> {
+                    // Store to the dao.
+                    try {
+                        dao.put(instance, proposal);
+                    }
+                    catch (final IOException e) {
+                        LOG.error("Failed to store learned value.", e);
+                    }
+
+                    // Report what we've learned.
+                    try {
+                        cache.get(instance).complete(proposal);
+                    } catch (ExecutionException e) {
+                        throw new RuntimeException(e);
+                    }
+                });
 	}
 	
 	public Future<Proposal<ByteBuffer>> mutiPaxos(
@@ -97,19 +120,5 @@ public class JaxosFacade implements Learner.Listener<ByteBuffer> {
 		} catch (InterruptedException | ExecutionException | TimeoutException e) {
 			throw new RuntimeException(e);
 		}
-	}
-
-	@Override
-	public void learn(String instance, Proposal<ByteBuffer> v) {
-		try {
-			final ByteBuffer bb = v.getValue();
-			final byte[] stringData = new byte[bb.limit()];
-			bb.get(stringData, 0, bb.limit());
-			LOG.info("Learned {} for {}.", new String(stringData), instance);
-			
-			cache.get(instance).complete(v);
-		} catch (ExecutionException e) {
-			throw new RuntimeException(e);
-		}	
 	}
 }

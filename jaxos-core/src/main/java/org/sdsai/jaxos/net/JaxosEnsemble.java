@@ -255,14 +255,14 @@ public class JaxosEnsemble implements AutoCloseable {
 			}
 		}
 	}
-	
-	@FunctionalInterface
-	private static interface IOConsumer {
-		void accept(Protocol protocol) throws Exception;
-	}
 
 	@Override
 	public void close() throws Exception {
 		allProtocols(p -> p.close());
+	}
+
+	@FunctionalInterface
+	private static interface IOConsumer {
+		void accept(Protocol protocol) throws Exception;
 	}
 }
