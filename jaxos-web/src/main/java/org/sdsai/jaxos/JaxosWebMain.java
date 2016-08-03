@@ -10,6 +10,7 @@ import org.glassfish.grizzly.http.util.HttpStatus;
 import org.glassfish.grizzly.nio.transport.TCPNIOTransport;
 import org.glassfish.grizzly.nio.transport.TCPNIOTransportBuilder;
 import org.glassfish.grizzly.strategies.WorkerThreadIOStrategy;
+import org.sdsai.jaxos.dao.LearnerDao;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 import org.slf4j.bridge.SLF4JBridgeHandler;
@@ -32,13 +33,16 @@ public class JaxosWebMain {
 
         HttpServer server = new HttpServer();
 
+        final LearnerDao learnerDao = new LearnerDao();
+        final JaxosFacade jaxosClient = new JaxosFacade(config, learnerDao);
+
         server.getServerConfiguration().addHttpHandler(
-                new JaxosApiHttpHandler(),
+                new JaxosApiHttpHandler(jaxosClient, learnerDao),
                 HttpHandlerRegistration.builder().contextPath("/jaxos/api/v1").build()
         );
 
         server.getServerConfiguration().addHttpHandler(
-                new JaxosUiHttpHandler(),
+                new JaxosUiHttpHandler(jaxosClient, learnerDao),
                 HttpHandlerRegistration.builder().contextPath("/jaxos").build()
         );
 

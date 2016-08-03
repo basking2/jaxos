@@ -24,14 +24,13 @@ public class JaxosApiHttpHandler extends HttpHandler {
 	private int timeout = 2;
 	private TimeUnit timeunit = TimeUnit.MINUTES;
 
-	private JaxosConfiguration config;
 	private JaxosFacade jaxosClient;
-    private LearnerDao learnerDao;
 
-	public JaxosApiHttpHandler() throws IOException {
-        this.config = new JaxosConfiguration();
-        this.learnerDao = new LearnerDao();
-        this.jaxosClient = new JaxosFacade(this.config, this.learnerDao);
+	private LearnerDao learnerDao;
+
+	public JaxosApiHttpHandler(final JaxosFacade facade, final LearnerDao learnerDao) throws IOException {
+        this.jaxosClient = facade;
+		this.learnerDao = learnerDao;
 	}
 
 	@Override
