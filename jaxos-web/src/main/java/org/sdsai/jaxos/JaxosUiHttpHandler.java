@@ -79,6 +79,8 @@ public class JaxosUiHttpHandler extends HttpHandler {
             final String value = request.getParameter("proposal");
             final String type = request.getParameter("type");
 
+            LOG.info("Deciding {} {}={}.", new Object[]{type, instance, value});
+
             if ("multipaxos".equals(type)) {
                 final Future<Proposal<ByteBuffer>> v = jaxosClient.mutiPaxos(instance, value, timeout, timeunit);
                 serveFutureProposal(request, response, v);
@@ -100,7 +102,12 @@ public class JaxosUiHttpHandler extends HttpHandler {
         try {
             final Proposal<ByteBuffer> proposal = future.get(timeout, timeunit);
             response.setContentType("text/plain");
-            response.getNIOOutputStream().write(proposal.getValue().array(), 0, proposal.getValue().limit());
+            ByteBuffer buffer = proposal.getValue();
+            response.getNIOOutputStream().write(
+                    buffer.array(),
+                    buffer.arrayOffset(),
+                    buffer.capacity()
+            );
         } catch (final IOException | InterruptedException | ExecutionException | TimeoutException e) {
             response.setStatus(HttpStatus.INTERNAL_SERVER_ERROR_500);
             try {
@@ -110,7 +117,8 @@ public class JaxosUiHttpHandler extends HttpHandler {
             }
             LOG.error("waiting", e);
         }
-
-        response.resume();
+        finally {
+            response.resume();
+        }
     }
 }
