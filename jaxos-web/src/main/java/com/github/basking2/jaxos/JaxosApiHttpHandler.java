@@ -1,18 +1,18 @@
-package org.sdsai.jaxos;
+package com.github.basking2.jaxos;
 
 import java.io.IOException;
 import java.nio.ByteBuffer;
 import java.util.concurrent.Future;
 import java.util.concurrent.TimeUnit;
 
+import com.github.basking2.jaxos.paxos.Proposal;
 import org.apache.commons.io.IOUtils;
 import org.glassfish.grizzly.http.Method;
 import org.glassfish.grizzly.http.server.HttpHandler;
 import org.glassfish.grizzly.http.server.Request;
 import org.glassfish.grizzly.http.server.Response;
 import org.glassfish.grizzly.http.util.HttpStatus;
-import org.sdsai.jaxos.dao.LearnerDao;
-import org.sdsai.jaxos.paxos.Proposal;
+import com.github.basking2.jaxos.dao.LearnerDao;
 
 /**
  */

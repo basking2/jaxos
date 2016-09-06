@@ -10,7 +10,7 @@ import org.glassfish.grizzly.http.util.HttpStatus;
 import org.glassfish.grizzly.nio.transport.TCPNIOTransport;
 import org.glassfish.grizzly.nio.transport.TCPNIOTransportBuilder;
 import org.glassfish.grizzly.strategies.WorkerThreadIOStrategy;
-import org.sdsai.jaxos.dao.LearnerDao;
+import com.github.basking2.jaxos.dao.LearnerDao;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 import org.slf4j.bridge.SLF4JBridgeHandler;

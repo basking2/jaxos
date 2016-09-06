@@ -1,7 +1,6 @@
-package org.sdsai.jaxos.net;
+package com.github.basking2.jaxos.net;
 
 import org.apache.commons.configuration.Configuration;
-import org.sdsai.jaxos.util.CipherUtil;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 
@@ -13,7 +12,6 @@ import java.net.InetSocketAddress;
 import java.net.SocketAddress;
 import java.nio.ByteBuffer;
 import java.nio.channels.*;
-import java.nio.channels.spi.AbstractSelector;
 import java.security.InvalidAlgorithmParameterException;
 import java.security.InvalidKeyException;
 import java.security.NoSuchAlgorithmException;

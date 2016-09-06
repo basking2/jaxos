@@ -1,4 +1,4 @@
-package org.sdsai.util;
+package com.github.basking2.jaxos.util;
 
 import org.apache.commons.configuration.CompositeConfiguration;
 import org.apache.commons.configuration.ConfigurationException;

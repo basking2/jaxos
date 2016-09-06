@@ -1,7 +1,7 @@
-package org.sdsai.jaxos.net;
+package com.github.basking2.jaxos.net;
 
+import com.github.basking2.jaxos.util.CipherUtil;
 import org.apache.commons.configuration.Configuration;
-import org.sdsai.jaxos.util.CipherUtil;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 

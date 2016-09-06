@@ -12,9 +12,9 @@ import com.github.basking2.jaxos.paxos.DefaultPaxosProposerDao;
 import com.github.basking2.jaxos.paxos.Promise;
 import com.github.basking2.jaxos.net.JaxosEnsemble;
 import com.github.basking2.jaxos.paxos.DefaultPaxosAcceptorDao;
-import com.github.basking2.jaxos.paxos.Learner;
 import com.github.basking2.jaxos.paxos.Proposal;
 import com.github.basking2.jaxos.util.FutureFinished;
+import com.github.basking2.jaxos.dao.LearnerDao;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 

@@ -1,11 +1,10 @@
-package org.sdsai.jaxos.net;
+package com.github.basking2.jaxos.net;
 
+import com.github.basking2.jaxos.JaxosConfiguration;
+import com.github.basking2.jaxos.paxos.Proposal;
 import org.junit.Assert;
 import org.junit.Test;
-import org.sdsai.jaxos.JaxosConfiguration;
-import org.sdsai.jaxos.paxos.Proposal;
 
-import java.io.IOException;
 import java.net.InetSocketAddress;
 import java.net.SocketAddress;
 import java.nio.ByteBuffer;

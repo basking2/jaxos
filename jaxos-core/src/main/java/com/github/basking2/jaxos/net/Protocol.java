@@ -7,8 +7,6 @@ import com.github.basking2.jaxos.paxos.Proposer;
 import java.io.IOException;
 import java.net.SocketAddress;
 
-import org.sdsai.jaxos.paxos.*;
-
 /**
  * This is the network layer for Jaxos.
  *

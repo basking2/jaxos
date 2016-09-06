@@ -6,14 +6,10 @@ import java.net.SocketAddress;
 import java.nio.ByteBuffer;
 import java.nio.channels.DatagramChannel;
 import java.nio.channels.SelectionKey;
-import java.nio.channels.Selector;
-import java.nio.channels.spi.AbstractSelector;
-import java.util.ArrayList;
 import java.util.List;
 import java.util.Set;
 
 import org.apache.commons.configuration.Configuration;
-import com.github.basking2.jaxos.util.CipherUtil;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 

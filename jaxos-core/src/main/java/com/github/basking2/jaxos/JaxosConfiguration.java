@@ -8,14 +8,14 @@ import java.util.List;
 
 import com.github.basking2.jaxos.net.Protocol;
 import com.github.basking2.jaxos.paxos.PaxosAcceptorDao;
-import org.apache.commons.configuration.CompositeConfiguration;
-import org.apache.commons.configuration.ConfigurationException;
-import org.apache.commons.configuration.PropertiesConfiguration;
-import org.apache.commons.configuration.SystemConfiguration;
 import com.github.basking2.jaxos.net.JaxosEnsemble;
 import com.github.basking2.jaxos.net.ProtocolUdp;
 import com.github.basking2.jaxos.paxos.Learner;
 import com.github.basking2.jaxos.paxos.PaxosProposerDao;
+import com.github.basking2.jaxos.net.ProtocolTcp;
+import com.github.basking2.jaxos.util.AppConfiguration;
+import org.slf4j.Logger;
+import org.slf4j.LoggerFactory;
 
 /**
  */

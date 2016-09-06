@@ -1,6 +1,7 @@
-package org.sdsai.jaxos.dao;
+package com.github.basking2.jaxos.dao;
 
-import org.sdsai.jaxos.paxos.Proposal;
+
+import com.github.basking2.jaxos.paxos.Proposal;
 
 import java.io.IOException;
 import java.nio.ByteBuffer;
