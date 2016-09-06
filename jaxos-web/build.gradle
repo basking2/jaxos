@@ -3,7 +3,7 @@ apply plugin: 'maven'
 apply plugin: 'signing'
 apply plugin: 'application'
 
-mainClassName = 'org.sdsai.jaxos.JaxosWebMain'
+mainClassName = 'com.github.basking2.jaxos.JaxosWebMain'
 applicationDefaultJvmArgs = ["-Dport=3000"]
 
 // group = defined by parent.
