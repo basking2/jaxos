@@ -1,4 +1,5 @@
 apply plugin: 'java'
+apply plugin: 'org.asciidoctor.convert'
 apply plugin: 'application'
 
 mainClassName = 'com.github.basking2.jaxos.JaxosWebMain'
