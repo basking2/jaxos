@@ -6,34 +6,13 @@ apply plugin: 'org.asciidoctor.convert'
 // version = defined by parent.
 
 compileJava {
-	options.compilerArgs << '-Xlint:unchecked'
-}
-
-task javadocJar(type: Jar) {
-    classifier = 'javadoc'
-    from javadoc
-}
-
-task sourcesJar(type: Jar) {
-    classifier = 'sources'
-    from sourceSets.main.allSource
-}
-
-artifacts {
-    archives javadocJar, sourcesJar
-}
-
-signing {
-    sign configurations.archives
-}
-
-repositories {
+    options.compilerArgs << '-Xlint:unchecked'
 }
 
 dependencies {
     compile 'org.slf4j:slf4j-api:1.7.21'
     compile 'org.apache.commons:commons-compress:1.11'
-	compile 'commons-io:commons-io:2.5'
+    compile 'commons-io:commons-io:2.5'
     compile 'org.tukaani:xz:1.5'
     compile 'commons-configuration:commons-configuration:1.10'
     compile 'com.google.guava:guava:19.0'
