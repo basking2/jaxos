@@ -1,0 +1,3 @@
+rootProject.name='jaxos'
+include 'jaxos-core'
+include 'jaxos-web'

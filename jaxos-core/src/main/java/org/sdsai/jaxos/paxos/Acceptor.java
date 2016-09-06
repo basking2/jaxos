@@ -3,7 +3,7 @@ package org.sdsai.jaxos.paxos;
 import java.io.IOException;
 
 /**
- * An acceptor. For normal paxos the value of N shoul be > 1.
+ * An acceptor. For normal paxos the value of N shoul be &gt; 1.
  * For multi paxos, which skips the prepare step, the value of N should be 0.
  */
 public class Acceptor<V> {
@@ -13,7 +13,8 @@ public class Acceptor<V> {
     /**
      * @param listener When a value is accepted this listener informs learners
      *                 and takes any other necessary action.
-     * @throws Exception If loading the previous state fails.
+     * @param dao How the acceptor persists data.
+     * @throws IOException If loading the previous state fails.
      */
     public Acceptor(final Listener<V> listener, final PaxosAcceptorDao<V> dao) throws IOException {
         this.dao = dao;

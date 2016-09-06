@@ -31,7 +31,8 @@ public class Proposer<V> {
     /**
      * Choose a value by gathering promises, and perhaps issuing a proposal.
      *
-     * @return The accepted proposal. The value may be different than what we submit.
+     * @param instance The instance to be decided.
+     * @param n The version of the proposal.
      */
     public void prepare(final String instance, final Long n) {
 
@@ -43,8 +44,8 @@ public class Proposer<V> {
 
     /**
      * Called when a {@link Acceptor} response to a prepare call.
-     * @param newPromise
-     * @throws Exception
+     * @param instance The instance to decide.
+     * @param newPromise The promise from an {@link Acceptor}.
      */
     public void promise(final String instance, final Promise<V> newPromise) {
 

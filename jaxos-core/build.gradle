@@ -1,0 +1,90 @@
+apply plugin: 'java'
+apply plugin: 'maven'
+apply plugin: 'signing'
+
+// group = defined by parent.
+// archiveBaseName = defined by parent and project name.
+// version = defined by parent.
+
+compileJava {
+	options.compilerArgs << '-Xlint:unchecked'
+}
+
+task javadocJar(type: Jar) {
+    classifier = 'javadoc'
+    from javadoc
+}
+
+task sourcesJar(type: Jar) {
+    classifier = 'sources'
+    from sourceSets.main.allSource
+}
+
+artifacts {
+    archives javadocJar, sourcesJar
+}
+
+signing {
+    sign configurations.archives
+}
+
+repositories {
+}
+
+dependencies {
+    compile 'org.slf4j:slf4j-api:1.7.21'
+    compile 'org.apache.commons:commons-compress:1.11'
+	compile 'commons-io:commons-io:2.5'
+    compile 'org.tukaani:xz:1.5'
+    compile 'commons-configuration:commons-configuration:1.10'
+    compile 'com.google.guava:guava:19.0'
+    testCompile group: 'junit', name: 'junit', version:'4.12'
+    testCompile group: 'org.slf4j', name: 'slf4j-simple', version:'1.7.21'
+
+    testCompile 'junit:junit:4.8.1'
+}
+
+uploadArchives {
+  repositories {
+    mavenDeployer {
+      beforeDeployment { MavenDeployment deployment -> signing.signPom(deployment) }
+
+      repository(url: "https://oss.sonatype.org/service/local/staging/deploy/maven2/") {
+        authentication(userName: ossrhUsername, password: ossrhPassword)
+      }
+
+      snapshotRepository(url: "https://oss.sonatype.org/content/repositories/snapshots/") {
+        authentication(userName: ossrhUsername, password: ossrhPassword)
+      }
+
+      pom.project {
+        name 'jaxos-core'
+        packaging 'jar'
+        // optionally artifactId can be defined here 
+        description 'Simple datastructures and algorithms.'
+        url 'https://github.com/basking2/jaxos'
+
+        scm {
+          connection 'scm:git:git@github.com:basking2/jaxos.git'
+          developerConnection 'git@github.com:basking2/jaxos.git'
+          url 'https://github.com/basking2/jaxos.git'
+        }
+
+        licenses {
+          license {
+            name 'MIT'
+            url 'https://opensource.org/licenses/MIT'
+          }
+        }
+
+        developers {
+          developer {
+            id 'basking2'
+            name 'Sam'
+            email 'basking2@yahoo.com'
+          }
+        }
+      }
+    }
+  }
+}
