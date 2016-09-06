@@ -1,5 +1,9 @@
 package com.github.basking2.jaxos.net;
 
+import com.github.basking2.jaxos.paxos.Acceptor;
+import com.github.basking2.jaxos.paxos.Learner;
+import com.github.basking2.jaxos.paxos.Proposer;
+
 import java.io.IOException;
 import java.net.SocketAddress;
 

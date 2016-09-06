@@ -39,7 +39,7 @@ public class ProtocolUdp extends AbstractProtocol {
 	private final Thread receiver;
 
 	/**
-	 * 
+     * @param bind The address to bind.
 	 * @param configuration This configuration is used to build description bits.
 	 * @param acceptors The list of acceptors to consult.
 	 * @param learners The list of the learners to consult.
