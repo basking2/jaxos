@@ -13,6 +13,23 @@ compileJava {
     options.compilerArgs << '-Xlint:unchecked'
 }
 
+task javadocJar(type: Jar) {
+    classifier = 'javadoc'
+    from javadoc
+}
+
+task sourcesJar(type: Jar) {
+    classifier = 'sources'
+    from sourceSets.main.allSource
+}
+
+artifacts {
+    archives javadocJar, sourcesJar
+}
+
+signing {
+    sign configurations.archives
+}
 dependencies {
     compile project(':jaxos-core')
     compile 'org.slf4j:slf4j-api:1.7.21'
