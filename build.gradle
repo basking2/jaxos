@@ -27,7 +27,7 @@ subprojects {
         mavenCentral()
         jcenter()
     }
-    
+
     uploadArchives {
         repositories {
             mavenDeployer {
