@@ -13,7 +13,7 @@ public class Proposer<V> {
      * 
      * @param quorum How many Acceptors to require promises from before proposing.
      * @param preparer How to communicate with instances.
-     * @param promiser How to 
+     * @param promiser How to handle a promise received from the majority of {@link Acceptor}s.
      * @param dao
      */
     public Proposer(

@@ -4,7 +4,7 @@ package com.github.basking2.jaxos.paxos;
  * This stores the state of Proposers for all Paxos instances.
  *
  * The PaxosAcceptorDao will have a similar interface, but they should not
- * store and retreive the same data.
+ * store and retrieve the same data.
  *
  * Also, implementations of this may "forget" values after a suitable timeout.
  */

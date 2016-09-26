@@ -81,12 +81,15 @@ public class JaxosEnsemble implements AutoCloseable {
 		this.learner = new Learner<ByteBuffer>(quorum, learnerListener);
 		try {
 		    // Build a new acceptor.
-			this.acceptor = new Acceptor<ByteBuffer>((instance, proposal) ->{
-			    allProtocols(protocol -> {
-                    final AcceptMessage msg = new AcceptMessage(instance, proposal, null, protocol);
-                    protocol.sendLearners(msg);
-                });
-            }, acceptorDao);
+			this.acceptor = new Acceptor<ByteBuffer>(
+                    (instance, proposal) ->{
+                        allProtocols(protocol -> {
+                            final AcceptMessage msg = new AcceptMessage(instance, proposal, null, protocol);
+                            protocol.sendLearners(msg);
+                        });
+                    },
+			        acceptorDao
+            );
 
             // Build a proposer.
 			this.proposer = new Proposer<ByteBuffer>(
