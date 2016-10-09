@@ -16,7 +16,7 @@ public class Promise<V> implements Serializable {
 	private static final long serialVersionUID = 1L;
 
 	@SuppressWarnings("rawtypes")
-	public static final Promise DENIED = new Promise(-1L);
+	public static final Promise ALREADY_PROMISED_NOT_YET_ACCEPTED = new Promise(-1L);
 
     private final Long n;
     private final Proposal<V> proposal;

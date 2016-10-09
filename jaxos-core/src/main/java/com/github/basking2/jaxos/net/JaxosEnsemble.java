@@ -241,13 +241,6 @@ public class JaxosEnsemble implements AutoCloseable {
 		}
 	};
 
-	public static final Majority ONE = new Majority() {
-		@Override
-		public int quorum(final int acceptors) {
-			return 1;
-		}
-	};
-
 	private void allProtocols(IOConsumer c) {
 		for (final Protocol protocol : protocols) {
 			try {

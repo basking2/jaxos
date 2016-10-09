@@ -26,7 +26,7 @@ public class Acceptor<V> {
 
 	    final Proposal<V> previouslyAccepted = dao.loadProposal(instance);
 
-        // Send back that we've already accepted somthing.
+        // Send back that we've already accepted something.
         if (previouslyAccepted != null) {
             return new Promise<V>(n, previouslyAccepted);
         }
@@ -34,7 +34,7 @@ public class Acceptor<V> {
         // Send back that we haven't accepted anything, but we've promised to another proposer.
         Long promiseNumber = dao.loadPromise(instance);
         if ( n <= promiseNumber) {
-            return Promise.DENIED;
+            return Promise.ALREADY_PROMISED_NOT_YET_ACCEPTED;
         }
 
     	dao.storePromise(instance, n);
